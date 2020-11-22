@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="forms-1.1-preview">
+    <CLASSES>
+      <root url="jar://$APPLICATION_HOME_DIR$/lib/forms-1.1-preview.jar!/" />
+      <root url="jar://$APPLICATION_HOME_DIR$/lib/forms_rt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

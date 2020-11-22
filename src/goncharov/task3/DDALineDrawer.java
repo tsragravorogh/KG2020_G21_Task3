@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package goncharov.task3;
 
 import java.awt.*;
 
@@ -9,7 +9,7 @@ public class DDALineDrawer implements LineDrawer {
     private PixelDrawer pd;
 
     @Override
-    public void drawLine(ScreenPoint p1, ScreenPoint p2) {
+    public void drawLine(ScreenPoint p1, ScreenPoint p2, Color color) {
         int x1 = p1.getX(), y1 = p1.getY();
         int x2 = p2.getX(), y2 = p2.getY();
         double dx = x2 - x1;
@@ -26,7 +26,7 @@ public class DDALineDrawer implements LineDrawer {
             double k = dy / dx;
             for (int j = x1; j < x2; j++) {
                 double i = k * (j - x1) + y1; // y1 = kx1 + b; y = kx + y1 - kx1 = k * (x - x1) + y1;
-                pd.colorPixel(j, (int) i, Color.red);
+                pd.colorPixel(j, (int) i, color);
             }
         } else {
             if (y1 > y2) {
@@ -40,8 +40,13 @@ public class DDALineDrawer implements LineDrawer {
             double kObr = dx / dy;
             for (int i = y1; i < y2; i++) {
                 double j = kObr * (i - y1) + x1; // y1 = kx1 + b; y = kx + y1 - kx1 = k * (x - x1) + y1;
-                pd.colorPixel((int) j, i, Color.blue);
+                pd.colorPixel((int) j, i, color);
             }
         }
+    }
+
+    @Override
+    public void setColor(Color c) {
+
     }
 }

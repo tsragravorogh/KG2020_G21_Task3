@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package goncharov.task3;
 
 public class ScreenPoint {
     private int x, y;

@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package goncharov.task3;
 
 public class RealPoint {
     private double x, y;

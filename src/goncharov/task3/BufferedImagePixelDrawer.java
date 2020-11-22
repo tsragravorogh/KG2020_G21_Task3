@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package goncharov.task3;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

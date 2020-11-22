@@ -1,4 +1,4 @@
-package ru.vsu.cs;
+package goncharov.task3;
 
 public class Line {
     private RealPoint p1, p2;
