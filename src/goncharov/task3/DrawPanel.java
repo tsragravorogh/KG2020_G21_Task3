@@ -32,20 +32,20 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
     }
 
     @Override
-    public void paint(Graphics g) {
+    public void paint(Graphics gr) {
         sc.setScreenW(getWidth());
         sc.setScreenH(getHeight());
         BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics bi_g = bi.createGraphics();
         bi_g.setColor(Color.WHITE);
         bi_g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
-        g.setColor(Color.BLACK);
+        bi_g.setColor(Color.BLACK);
 
         for (int i = (int) sc.getRealX(); i <= (int) (sc.getRealX() + sc.getRealW()); i++) {
-            g.drawString(Integer.toString(i), (int) (sc.getScreenW() * (i - sc.getRealX()) / sc.getRealW()), sc.r2s(new RealPoint(0, 0)).getY());
+            bi_g.drawString(Integer.toString(i), (int) (sc.getScreenW() * (i - sc.getRealX()) / sc.getRealW()), sc.r2s(new RealPoint(0, 0)).getY());
         }
         for (int i = (int) sc.getRealY(); i >= (int) (sc.getRealY() - sc.getRealH()); i--) {
-            g.drawString(Integer.toString(i), sc.r2s(new RealPoint(0, 0)).getX(), (int) (sc.getScreenH() * (sc.getRealY() - i) / sc.getRealH()));
+            bi_g.drawString(Integer.toString(i), sc.r2s(new RealPoint(0, 0)).getX(), (int) (sc.getScreenH() * (sc.getRealY() - i) / sc.getRealH()));
         }
         bi_g.dispose();
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
@@ -71,7 +71,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
         }
 
 
-        g.drawImage(bi, 0, 0, null);
+        gr.drawImage(bi, 0, 0, null);
 //        this.add(draw);
 //        this.add(getFunction);
 //        setFunction(Integer.parseInt(getFunction.getText()));

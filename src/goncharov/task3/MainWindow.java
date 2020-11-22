@@ -24,6 +24,7 @@ public class MainWindow extends JFrame {
         JMenuItem functionSix = new JMenuItem("y = abs(x^4 - x^3 + x^2 - x)");
         JMenuItem functionSeven = new JMenuItem("y = x^4 - abs(x^3)");
         JMenuItem functionEight = new JMenuItem(" y = e^((sin(x) + cos(x)) / (x^2 + 1))");
+        JMenuItem functionNine = new JMenuItem("y = 1 / x");
 
         functionsMenu.add(functionOne);
         functionsMenu.add(functionTwo);
@@ -33,6 +34,7 @@ public class MainWindow extends JFrame {
         functionsMenu.add(functionSix);
         functionsMenu.add(functionSeven);
         functionsMenu.add(functionEight);
+        functionsMenu.add(functionNine);
 
         jMenuBar.add(functionsMenu);
         setJMenuBar(jMenuBar);
@@ -77,5 +79,9 @@ public class MainWindow extends JFrame {
             dp.repaint();
         });
 
+        functionNine.addActionListener(actionEvent -> {
+            dp.setFunction(new FunctionNine());
+            dp.repaint();
+        });
     }
 }
