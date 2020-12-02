@@ -8,11 +8,6 @@ import java.util.List;
 public class FunctionEight  implements IFunction {
 
     @Override
-    public boolean isGap(double x) {
-        return false;
-    }
-
-    @Override
     public ArrayList<ArrayList<Double>> getRange(double xLeft, double xRight) {
         ArrayList<Double> list = new ArrayList<>();
         for(double i = xLeft; i < xRight; i += (xRight - xLeft) / 500) {

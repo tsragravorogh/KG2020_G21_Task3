@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionOne implements IFunction {
-    @Override
-    public boolean isGap(double x) {
-        return false;
-    }
+
 
     @Override
     public ArrayList<ArrayList<Double>> getRange(double xLeft, double xRight) {

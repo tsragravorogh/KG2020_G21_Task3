@@ -8,10 +8,6 @@ import java.util.List;
 public class FunctionNine implements IFunction {
 
 
-    @Override
-    public boolean isGap(double x) {
-        return Math.abs(1 / (x + 0.5)) > 5000;
-    }
 
     @Override
     public ArrayList<ArrayList<Double>> getRange(double xLeft, double xRight) {

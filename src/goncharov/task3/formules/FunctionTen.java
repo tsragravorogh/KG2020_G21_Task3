@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionTen implements IFunction {
-    @Override
-    public boolean isGap(double x) {
-        return Math.tan(x) > Double.NEGATIVE_INFINITY || Math.tan(x) < Double.POSITIVE_INFINITY;
-    }
 
     @Override
     public ArrayList<ArrayList<Double>> getRange(double xLeft, double xRight) {
