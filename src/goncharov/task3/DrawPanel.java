@@ -6,11 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class DrawPanel extends JPanel implements MouseMotionListener, MouseListener, MouseWheelListener, KeyListener {
 
-    private ScreenConverter sc = new ScreenConverter(-6, 6, 12, 12, 1920, 1080);
+    private ScreenConverter sc = new ScreenConverter(-10, 10, 20, 20, 1200, 800);
     private Line xAxis = new Line(-1, 0, 1, 0);
     private Line yAxis = new Line(0, -1, 0, 1);
     private ArrayList<Line> allLines = new ArrayList<>();
@@ -18,6 +19,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
     private ArrayList<IFunction> functions = new ArrayList<>();
     private ArrayList<Line> lines = new ArrayList<>();
     private IFunction function;
+    private RealPoint mouseCoordinates = new RealPoint(0, 0);
     private JButton draw = new JButton("DRAW");
     private JTextArea getFunction = new JTextArea("1");
 
@@ -41,42 +43,72 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
         bi_g.fillRect(0, 0, bi.getWidth(), bi.getHeight());
         bi_g.setColor(Color.BLACK);
 
-        for (int i = (int) sc.getRealX(); i <= (int) (sc.getRealX() + sc.getRealW()); i++) {
-            bi_g.drawString(Integer.toString(i), (int) (sc.getScreenW() * (i - sc.getRealX()) / sc.getRealW()), sc.r2s(new RealPoint(0, 0)).getY());
-        }
-        for (int i = (int) sc.getRealY(); i >= (int) (sc.getRealY() - sc.getRealH()); i--) {
-            bi_g.drawString(Integer.toString(i), sc.r2s(new RealPoint(0, 0)).getX(), (int) (sc.getScreenH() * (sc.getRealY() - i) / sc.getRealH()));
-        }
-        bi_g.dispose();
+        drawFigure(bi_g);
+//        bi_g.dispose();
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new DDALineDrawer(pd);
-        //drawGrid(ld);
-        //drawAxes(ld);
-        /**/
-
-        for (int i = (int) sc.getRealX(); i <= (int) (sc.getRealX() + sc.getRealW()); i++) {
-            ld.drawLine(new ScreenPoint((int) ((sc.getScreenW() * (i - sc.getRealX()) / sc.getRealW())), 0),
-                    new ScreenPoint((int) (sc.getScreenW() * (i - sc.getRealX()) / sc.getRealW()), sc.getScreenH()), Color.blue);
-
-        }
-        for (int i = (int) sc.getRealY(); i >= (int) (sc.getRealY() - sc.getRealH()); i--) {
-            ld.drawLine(new ScreenPoint(0, (int) (sc.getScreenH() * (sc.getRealY() - i) / sc.getRealH())),
-                    new ScreenPoint(sc.getScreenW(), (int) (sc.getScreenH() * (sc.getRealY() - i) / sc.getRealH())), Color.blue);
-        }
 
         try {
-            drawAll(ld);
+            drawAll(ld, gr);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        bi_g.dispose();
 
         gr.drawImage(bi, 0, 0, null);
-//        this.add(draw);
-//        this.add(getFunction);
-//        setFunction(Integer.parseInt(getFunction.getText()));
-//        getFunction.setSize(20, 30);
-//        super.paint(g);
+    }
+
+
+
+    private void drawFigure(Graphics g) {
+        double step = scale;
+        double xStart = sc.getRealX() - ((sc.getRealX() + step) % step);
+        double yStart = sc.getRealY() - ((sc.getRealY() + step) % step) + step; // нетипичная формула для нахождения левой верхней точки по шкале, соседствующей с позицией левой верхней точки экрана
+        double xFinish = sc.getRealX() + sc.getRealW();
+        double yFinish = sc.getRealY() - sc.getRealH();
+        for(double i = xStart; i < xFinish; i += step) {
+            DecimalFormat df = new DecimalFormat("0.####");
+            String s = df.format(i);
+            if(Math.abs(i) < 0.000001) s = "0";
+            int opacity = s.length() * 5;
+            double x = sc.r2s(new RealPoint(i, sc.getRealY() - sc.getRealH())).getX() - opacity;
+            double y = sc.r2s(new RealPoint(i, sc.getRealY() - sc.getRealH())).getY();
+            g.drawString(s, (int)x, (int)y);
+        }
+
+        for(double i = yStart; i > yFinish; i -= step) {
+            DecimalFormat df = new DecimalFormat("0.####");
+            String s = df.format(i);
+            if(Math.abs(i) < 0.000001) s = "0";
+            int opacity = s.length() * 7;
+            double x = sc.r2s(new RealPoint(sc.getRealX() + sc.getRealW(), i)).getX() - opacity;
+            double y = sc.r2s(new RealPoint(sc.getRealX(), i)).getY() + 4;
+            g.drawString(s, (int)x, (int)y);
+        }
+    }
+
+    private void drawGrid(LineDrawer ld, Graphics g) {
+        ld.setColor(new Color(131, 208, 255));
+        g.setColor(Color.black);
+        double step = scale;
+        double xStart = sc.getRealX() - ((sc.getRealX() + step) % step);
+        double yStart = sc.getRealY() - ((sc.getRealY() + step) % step) + step; // нетипичная формула для нахождения левой верхней точки по шкале, соседствующей с позицией левой верхней точки экрана
+        double xFinish = sc.getRealX() + sc.getRealW();
+        double yFinish = sc.getRealY() - sc.getRealH();
+        double xWidth = xFinish - xStart;
+        if(xWidth < 20) scale = 1;
+        if(xWidth > 20 && xWidth < 50) scale = 5;
+        if(xWidth > 50 && xWidth < 100) scale = 10;
+        if(xWidth > 100) scale = 15;
+        if(xWidth > 200) scale = 30;
+
+
+        for(double i = xStart; i < xFinish; i += step) {
+            drawLine(ld, new Line(new RealPoint(i, sc.getRealY()), new RealPoint(i, sc.getRealY() - sc.getRealH())), Color.blue);
+        }
+        for(double i = yStart; i > yFinish; i -= step) {
+            drawLine(ld, new Line(new RealPoint(sc.getRealX(), i), new RealPoint(sc.getRealX() + sc.getRealW(), i)), Color.blue);
+        }
     }
 
     private void drawAxes(LineDrawer ld) {
@@ -99,18 +131,18 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
         FunctionService.drawFunction(ld, sc, function);
     }
 
-    private void drawAll(LineDrawer ld) throws Exception {
-        drawLine(ld, xAxis, Color.red);
-        drawLine(ld, yAxis, Color.red);
+    private void drawAll(LineDrawer ld, Graphics g) throws Exception {
         for (Line q: allLines) {
             drawLine(ld, q, Color.pink);
         }
         if (newLine != null) {
             drawLine(ld, newLine, Color.pink);
         }
-        if(function != null)
-            drawFunction(ld);
+        drawGrid(ld, g);
         drawAxes(ld);
+        if(function != null) {
+            drawFunction(ld);
+        }
     }
     private ScreenPoint prevPoint = null;
 
@@ -190,6 +222,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener, MouseListe
         }
         sc.setRealW(scale * sc.getRealW());
         sc.setRealH(scale * sc.getRealH());
+        sc.setRealX(sc.getRealX() * scale);
+        sc.setRealY(sc.getRealY() * scale);
         repaint();
     }
 

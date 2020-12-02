@@ -1,5 +1,7 @@
 package goncharov.task3;
 
+import java.util.ArrayList;
+
 public class RealPoint {
     private double x, y;
 
@@ -23,4 +25,5 @@ public class RealPoint {
     public void setY(double y) {
         this.y = y;
     }
+
 }

@@ -6,10 +6,15 @@ import goncharov.task3.formules.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements MouseMotionListener {
     private DrawPanel dp;
+    JTextField textArea = new JTextField();
+    //JTextArea textArea = new JTextArea();
+    ScreenConverter sc = new ScreenConverter(-6, 6, 12, 12, 1200, 800);
 
     public MainWindow() {
         dp = new DrawPanel();
@@ -24,7 +29,8 @@ public class MainWindow extends JFrame {
         JMenuItem functionSix = new JMenuItem("y = abs(x^4 - x^3 + x^2 - x)");
         JMenuItem functionSeven = new JMenuItem("y = x^4 - abs(x^3)");
         JMenuItem functionEight = new JMenuItem(" y = e^((sin(x) + cos(x)) / (x^2 + 1))");
-        JMenuItem functionNine = new JMenuItem("y = 1 / x");
+        JMenuItem functionNine = new JMenuItem("y = 1 / (x + 1.5) - 2.5");
+        JMenuItem functionTen = new JMenuItem("y = tg(x)");
 
         functionsMenu.add(functionOne);
         functionsMenu.add(functionTwo);
@@ -35,8 +41,10 @@ public class MainWindow extends JFrame {
         functionsMenu.add(functionSeven);
         functionsMenu.add(functionEight);
         functionsMenu.add(functionNine);
+        functionsMenu.add(functionTen);
 
         jMenuBar.add(functionsMenu);
+        jMenuBar.add(textArea);
         setJMenuBar(jMenuBar);
 
         functionOne.addActionListener(actionEvent -> {
@@ -83,5 +91,21 @@ public class MainWindow extends JFrame {
             dp.setFunction(new FunctionNine());
             dp.repaint();
         });
+
+        functionTen.addActionListener(actionEvent -> {
+            dp.setFunction(new FunctionTen());
+            dp.repaint();
+        });
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        System.out.println(e.getX()+ ", "+ getY());
+        //System.out.println(dp.getMouseX());
+        textArea.setText(String.valueOf(e.getX()) + ", "+ String.valueOf(e.getY()));
     }
 }
